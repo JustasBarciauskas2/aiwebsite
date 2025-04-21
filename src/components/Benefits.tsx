@@ -21,10 +21,10 @@ const RadarChart = () => {
     { label: 'Scalability', traditional: 70, ai: 80 }
   ];
 
-  const size = 400; // Increased from 300
+  const size = 400;
   const centerX = size / 2;
   const centerY = size / 2;
-  const radius = size * 0.35; // Adjusted from 0.4 to give more space for labels
+  const radius = size * 0.35;
   const angleStep = (2 * Math.PI) / metrics.length;
 
   const getPoint = (value: number, index: number) => {
@@ -38,7 +38,7 @@ const RadarChart = () => {
 
   const getLabelPoint = (index: number) => {
     const angle = index * angleStep - Math.PI / 2;
-    const distance = radius * 1.3; // Increased distance for labels
+    const distance = radius * 1.3;
     return {
       x: centerX + distance * Math.cos(angle),
       y: centerY + distance * Math.sin(angle)
@@ -62,7 +62,7 @@ const RadarChart = () => {
         <h3 className="text-xl font-bold text-white mb-6 text-center">Traditional vs AI-Powered Development</h3>
         
         <div className="relative">
-          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="mx-auto">
+          <svg width={size} height={size} viewBox={`-40 -40 ${size + 80} ${size + 80}`} className="mx-auto">
             {/* Background lines */}
             {[20, 40, 60, 80, 100].map((level) => (
               <path
@@ -108,27 +108,54 @@ const RadarChart = () => {
 
             {/* Labels */}
             {metrics.map((metric, index) => {
-              const point = getLabelPoint(index);
-              const angle = (index * angleStep * 180) / Math.PI - 90;
-              let anchor = "middle";
-              if (angle > 45 && angle < 135) anchor = "start";
-              if (angle > 225 && angle < 315) anchor = "end";
-              
-              return (
-                <text
-                  key={index}
-                  x={point.x}
-                  y={point.y}
-                  textAnchor={anchor}
-                  dominantBaseline="middle"
-                  fill="white"
-                  fontSize="14"
-                  className="font-medium"
-                >
-                  {metric.label}
-                </text>
-              );
-            })}
+  const point = getLabelPoint(index);
+  const angle = (index * angleStep * 180) / Math.PI - 90;
+
+  let anchor = "middle";
+  let xOffset = 0;
+
+  // Force Performance to be symmetric like Development Speed
+  if (metric.label === "Performance") {
+    return (
+      <text
+        key={index}
+        x={point.x}
+        y={point.y}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fill="white"
+        fontSize="14"
+        className="font-medium"
+      >
+        {metric.label}
+      </text>
+    );
+  }
+
+  if (angle > 45 && angle < 135) {
+    anchor = "start";
+    xOffset = 10;
+  } else if (angle > 225 && angle < 315) {
+    anchor = "end";
+    xOffset = -10;
+  }
+
+  return (
+    <text
+      key={index}
+      x={point.x + xOffset}
+      y={point.y}
+      textAnchor={anchor}
+      dominantBaseline="middle"
+      fill="white"
+      fontSize="14"
+      className="font-medium"
+    >
+      {metric.label}
+    </text>
+  );
+})}
+
           </svg>
 
           <div className="flex justify-center gap-8 mt-6">
@@ -188,8 +215,8 @@ const Benefits = () => {
         {/* Main background gradients */}
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-black">
           <div className="absolute top-0 inset-x-0 h-[70%] opacity-30">
-            <div className="absolute top-1/4 right-0 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl"></div>
-            <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-pink-600 rounded-full filter blur-3xl"></div>
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-600 rounded-full filter blur-3xl"></div>
           </div>
         </div>
         {/* Bottom fade to black */}
