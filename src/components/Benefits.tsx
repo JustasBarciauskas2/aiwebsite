@@ -11,6 +11,142 @@ const BenefitCard = ({ icon, title, description }: { icon: React.ReactNode, titl
   </div>
 );
 
+const RadarChart = () => {
+  const metrics = [
+    { label: 'Development Speed', traditional: 30, ai: 90 },
+    { label: 'Cost Efficiency', traditional: 40, ai: 85 },
+    { label: 'Customization', traditional: 80, ai: 75 },
+    { label: 'Performance', traditional: 75, ai: 90 },
+    { label: 'Maintenance', traditional: 50, ai: 85 },
+    { label: 'Scalability', traditional: 70, ai: 80 }
+  ];
+
+  const size = 400; // Increased from 300
+  const centerX = size / 2;
+  const centerY = size / 2;
+  const radius = size * 0.35; // Adjusted from 0.4 to give more space for labels
+  const angleStep = (2 * Math.PI) / metrics.length;
+
+  const getPoint = (value: number, index: number) => {
+    const angle = index * angleStep - Math.PI / 2;
+    const distance = (value / 100) * radius;
+    return {
+      x: centerX + distance * Math.cos(angle),
+      y: centerY + distance * Math.sin(angle)
+    };
+  };
+
+  const getLabelPoint = (index: number) => {
+    const angle = index * angleStep - Math.PI / 2;
+    const distance = radius * 1.3; // Increased distance for labels
+    return {
+      x: centerX + distance * Math.cos(angle),
+      y: centerY + distance * Math.sin(angle)
+    };
+  };
+
+  const createPath = (values: number[]) => {
+    return values.map((value, index) => {
+      const point = getPoint(value, index);
+      return `${index === 0 ? 'M' : 'L'} ${point.x},${point.y}`;
+    }).join(' ') + ' Z';
+  };
+
+  const traditionalPath = createPath(metrics.map(m => m.traditional));
+  const aiPath = createPath(metrics.map(m => m.ai));
+
+  return (
+    <div className="relative w-full max-w-2xl mx-auto mt-12 mb-16">
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-700/20 rounded-xl filter blur-xl"></div>
+      <div className="relative bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+        <h3 className="text-xl font-bold text-white mb-6 text-center">Traditional vs AI-Powered Development</h3>
+        
+        <div className="relative">
+          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="mx-auto">
+            {/* Background lines */}
+            {[20, 40, 60, 80, 100].map((level) => (
+              <path
+                key={level}
+                d={createPath(Array(metrics.length).fill(level))}
+                fill="none"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="1"
+              />
+            ))}
+
+            {/* Axis lines */}
+            {metrics.map((_, index) => {
+              const point = getPoint(100, index);
+              return (
+                <line
+                  key={index}
+                  x1={centerX}
+                  y1={centerY}
+                  x2={point.x}
+                  y2={point.y}
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="1"
+                />
+              );
+            })}
+
+            {/* Traditional path */}
+            <path
+              d={traditionalPath}
+              fill="rgba(255,255,255,0.1)"
+              stroke="rgba(255,255,255,0.3)"
+              strokeWidth="2"
+            />
+
+            {/* AI path */}
+            <path
+              d={aiPath}
+              fill="rgba(147,51,234,0.2)"
+              stroke="rgb(147,51,234)"
+              strokeWidth="2"
+            />
+
+            {/* Labels */}
+            {metrics.map((metric, index) => {
+              const point = getLabelPoint(index);
+              const angle = (index * angleStep * 180) / Math.PI - 90;
+              let anchor = "middle";
+              if (angle > 45 && angle < 135) anchor = "start";
+              if (angle > 225 && angle < 315) anchor = "end";
+              
+              return (
+                <text
+                  key={index}
+                  x={point.x}
+                  y={point.y}
+                  textAnchor={anchor}
+                  dominantBaseline="middle"
+                  fill="white"
+                  fontSize="14"
+                  className="font-medium"
+                >
+                  {metric.label}
+                </text>
+              );
+            })}
+          </svg>
+
+          <div className="flex justify-center gap-8 mt-6">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-purple-600 rounded-full mr-2"></div>
+              <span className="text-white">AI-Powered</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-white/30 rounded-full mr-2"></div>
+              <span className="text-white">Traditional</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Benefits = () => {
   const benefits = [
     {
@@ -68,6 +204,8 @@ const Benefits = () => {
           </p>
         </div>
 
+        <RadarChart />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => (
             <BenefitCard
@@ -79,9 +217,8 @@ const Benefits = () => {
           ))}
         </div>
 
-        {/* CTA Card - now positioned absolutely */}
+        {/* CTA Card */}
         <div className="relative w-full max-w-4xl mx-auto my-16 z-30">
-
           <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-8 rounded-xl shadow-lg shadow-purple-500/25 mx-4">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="mb-6 md:mb-0 md:mr-8">
