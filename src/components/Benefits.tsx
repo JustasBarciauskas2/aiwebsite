@@ -57,24 +57,26 @@ const RadarChart = () => {
 
   return (
     <div className="relative w-full max-w-2xl mx-auto mt-12 mb-16">
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-700/20 rounded-xl filter blur-xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-700/20 rounded-xl filter blur-xl animate-pulse"></div>
       <div className="relative bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
         <h3 className="text-xl font-bold text-white mb-6 text-center">Traditional vs AI-Powered Development</h3>
         
         <div className="relative">
           <svg width={size} height={size} viewBox={`-40 -40 ${size + 80} ${size + 80}`} className="mx-auto">
-            {/* Background lines */}
-            {[20, 40, 60, 80, 100].map((level) => (
+            {/* Background lines with animation */}
+            {[20, 40, 60, 80, 100].map((level, index) => (
               <path
                 key={level}
                 d={createPath(Array(metrics.length).fill(level))}
                 fill="none"
                 stroke="rgba(255,255,255,0.1)"
                 strokeWidth="1"
+                className="animate-radar-line"
+                style={{ animationDelay: `${index * 0.2}s` }}
               />
             ))}
 
-            {/* Axis lines */}
+            {/* Axis lines with animation */}
             {metrics.map((_, index) => {
               const point = getPoint(100, index);
               return (
@@ -86,81 +88,99 @@ const RadarChart = () => {
                   y2={point.y}
                   stroke="rgba(255,255,255,0.1)"
                   strokeWidth="1"
+                  className="animate-radar-line"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 />
               );
             })}
 
-            {/* Traditional path */}
+            {/* Traditional path with animation */}
             <path
               d={traditionalPath}
               fill="rgba(255,255,255,0.1)"
               stroke="rgba(255,255,255,0.3)"
               strokeWidth="2"
+              className="animate-radar-path"
             />
 
-            {/* AI path */}
+            {/* AI path with animation and glow effect */}
             <path
               d={aiPath}
               fill="rgba(147,51,234,0.2)"
               stroke="rgb(147,51,234)"
               strokeWidth="2"
+              className="animate-radar-path"
+              filter="url(#glow)"
             />
+
+            {/* Glow filter */}
+            <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feFlood floodColor="rgb(147,51,234)" floodOpacity="0.5" />
+                <feComposite in2="blur" operator="in" />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
 
             {/* Labels */}
             {metrics.map((metric, index) => {
-  const point = getLabelPoint(index);
-  const angle = (index * angleStep * 180) / Math.PI - 90;
+              const point = getLabelPoint(index);
+              const angle = (index * angleStep * 180) / Math.PI - 90;
 
-  let anchor = "middle";
-  let xOffset = 0;
+              let anchor = "middle";
+              let xOffset = 0;
 
-  // Force Performance to be symmetric like Development Speed
-  if (metric.label === "Performance") {
-    return (
-      <text
-        key={index}
-        x={point.x}
-        y={point.y}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="white"
-        fontSize="14"
-        className="font-medium"
-      >
-        {metric.label}
-      </text>
-    );
-  }
+              if (metric.label === "Performance") {
+                return (
+                  <text
+                    key={index}
+                    x={point.x}
+                    y={point.y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize="14"
+                    className="font-medium animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    {metric.label}
+                  </text>
+                );
+              }
 
-  if (angle > 45 && angle < 135) {
-    anchor = "start";
-    xOffset = 10;
-  } else if (angle > 225 && angle < 315) {
-    anchor = "end";
-    xOffset = -10;
-  }
+              if (angle > 45 && angle < 135) {
+                anchor = "start";
+                xOffset = 10;
+              } else if (angle > 225 && angle < 315) {
+                anchor = "end";
+                xOffset = -10;
+              }
 
-  return (
-    <text
-      key={index}
-      x={point.x + xOffset}
-      y={point.y}
-      textAnchor={anchor}
-      dominantBaseline="middle"
-      fill="white"
-      fontSize="14"
-      className="font-medium"
-    >
-      {metric.label}
-    </text>
-  );
-})}
-
+              return (
+                <text
+                  key={index}
+                  x={point.x + xOffset}
+                  y={point.y}
+                  textAnchor={anchor}
+                  dominantBaseline="middle"
+                  fill="white"
+                  fontSize="14"
+                  className="font-medium animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  {metric.label}
+                </text>
+              );
+            })}
           </svg>
 
           <div className="flex justify-center gap-8 mt-6">
             <div className="flex items-center">
-              <div className="w-3 h-3 bg-purple-600 rounded-full mr-2"></div>
+              <div className="w-3 h-3 bg-purple-600 rounded-full mr-2 animate-pulse"></div>
               <span className="text-white">AI-Powered</span>
             </div>
             <div className="flex items-center">

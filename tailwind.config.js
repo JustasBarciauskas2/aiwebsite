@@ -19,6 +19,25 @@ export default {
           600: '#DB2777',
         },
       },
+      animation: {
+        'radar-line': 'radar-line 1s ease-out forwards',
+        'radar-path': 'radar-path 1s ease-out forwards',
+        'fade-in': 'fade-in 0.5s ease-out forwards',
+      },
+      keyframes: {
+        'radar-line': {
+          '0%': { opacity: '0', transform: 'scale(0.8)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'radar-path': {
+          '0%': { opacity: '0', strokeDashoffset: '1000' },
+          '100%': { opacity: '1', strokeDashoffset: '0' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
     },
   },
   plugins: [],
