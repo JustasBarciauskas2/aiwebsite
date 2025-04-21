@@ -1,75 +1,9 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { Circle } from "lucide-react";
+import { motion } from "framer-motion";
+import { Circle, Clock, PoundSterling } from "lucide-react";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-
-function ElegantShape({
-    className,
-    delay = 0,
-    width = 400,
-    height = 100,
-    rotate = 0,
-    gradient = "from-white/[0.08]",
-}: {
-    className?: string;
-    delay?: number;
-    width?: number;
-    height?: number;
-    rotate?: number;
-    gradient?: string;
-}) {
-    return (
-        <motion.div
-            initial={{
-                opacity: 0,
-                y: -150,
-                rotate: rotate - 15,
-            }}
-            animate={{
-                opacity: 1,
-                y: 0,
-                rotate: rotate,
-            }}
-            transition={{
-                duration: 2.4,
-                delay,
-                ease: [0.23, 0.86, 0.39, 0.96],
-                opacity: { duration: 1.2 },
-            }}
-            className={cn("absolute", className)}
-        >
-            <motion.div
-                animate={{
-                    y: [0, 15, 0],
-                }}
-                transition={{
-                    duration: 12,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                }}
-                style={{
-                    width,
-                    height,
-                }}
-                className="relative"
-            >
-                <div
-                    className={cn(
-                        "absolute inset-0 rounded-full",
-                        "bg-gradient-to-r to-transparent",
-                        gradient,
-                        "backdrop-blur-[2px] border-2 border-white/[0.15]",
-                        "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
-                        "after:absolute after:inset-0 after:rounded-full",
-                        "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]"
-                    )}
-                />
-            </motion.div>
-        </motion.div>
-    );
-}
+import { cn } from "../../lib/utils";
 
 function HeroGeometric({
     badge = "Design Collective",
@@ -95,53 +29,15 @@ function HeroGeometric({
 
     return (
         <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303]">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-
-            <div className="absolute inset-0 overflow-hidden">
-                <ElegantShape
-                    delay={0.3}
-                    width={600}
-                    height={140}
-                    rotate={12}
-                    gradient="from-indigo-500/[0.15]"
-                    className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-                />
-
-                <ElegantShape
-                    delay={0.5}
-                    width={500}
-                    height={120}
-                    rotate={-15}
-                    gradient="from-rose-500/[0.15]"
-                    className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
-                />
-
-                <ElegantShape
-                    delay={0.4}
-                    width={300}
-                    height={80}
-                    rotate={-8}
-                    gradient="from-violet-500/[0.15]"
-                    className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-                />
-
-                <ElegantShape
-                    delay={0.6}
-                    width={200}
-                    height={60}
-                    rotate={20}
-                    gradient="from-amber-500/[0.15]"
-                    className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
-                />
-
-                <ElegantShape
-                    delay={0.7}
-                    width={150}
-                    height={40}
-                    rotate={-25}
-                    gradient="from-cyan-500/[0.15]"
-                    className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
-                />
+            {/* Background gradients */}
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-black">
+                    <div className="absolute inset-x-0 top-0 h-[70%] opacity-30">
+                        <div className="absolute top-1/4 right-0 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl"></div>
+                        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-pink-600 rounded-full filter blur-3xl"></div>
+                    </div>
+                </div>
+                <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-black via-black to-transparent"></div>
             </div>
 
             <div className="relative z-10 container mx-auto px-4 md:px-6">
@@ -151,10 +47,10 @@ function HeroGeometric({
                         variants={fadeUpVariants}
                         initial="hidden"
                         animate="visible"
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-8 md:mb-12"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 mb-8 md:mb-12"
                     >
-                        <Circle className="h-2 w-2 fill-rose-500/80" />
-                        <span className="text-sm text-white/60 tracking-wide">
+                        <Circle className="h-2 w-2 fill-purple-600" />
+                        <span className="text-sm text-white/80 tracking-wide">
                             {badge}
                         </span>
                     </motion.div>
@@ -165,16 +61,12 @@ function HeroGeometric({
                         initial="hidden"
                         animate="visible"
                     >
-                        <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 md:mb-8 tracking-tight">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 font-inter">
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-purple-600">
                                 {title1}
                             </span>
                             <br />
-                            <span
-                                className={cn(
-                                    "bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white/90 to-rose-300"
-                                )}
-                            >
+                            <span className="text-white">
                                 {title2}
                             </span>
                         </h1>
@@ -186,10 +78,41 @@ function HeroGeometric({
                         initial="hidden"
                         animate="visible"
                     >
-                        <p className="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
-                            Crafting exceptional digital experiences through
-                            innovative design and cutting-edge technology.
-                        </p>
+                        <p className="text-base sm:text-lg md:text-lg text-zinc-400 mb-8 leading-relaxed font-light">
+  Custom websites with integrated appointment scheduling for your mobile detailing business – built in days, at a fraction of the cost.
+</p>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                            <a 
+                                href="#contact"
+                                className="w-full sm:w-auto px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full transition-colors"
+                            >
+                                Get Started
+                            </a>
+                            <a 
+                                href="#pricing"
+                                className="w-full sm:w-auto px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-full transition-colors border border-zinc-800"
+                            >
+                                View Pricing
+                            </a>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+                            <div className="flex items-center gap-3 bg-zinc-900/50 px-6 py-4 rounded-2xl border border-zinc-800">
+                                <Clock className="h-6 w-6 text-purple-500" />
+                                <div className="text-left">
+                                    <div className="text-xl font-semibold text-purple-500">3-5 Days</div>
+                                    <div className="text-sm text-zinc-400">From concept to launch</div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3 bg-zinc-900/50 px-6 py-4 rounded-2xl border border-zinc-800">
+                                <PoundSterling className="h-6 w-6 text-purple-500" />
+                                <div className="text-left">
+                                    <div className="text-xl font-semibold text-purple-500">60% Lower</div>
+                                    <div className="text-sm text-zinc-400">Than traditional costs</div>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
             </div>
